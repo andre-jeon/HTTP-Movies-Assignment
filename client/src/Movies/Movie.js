@@ -18,6 +18,10 @@ function Movie({ addToSavedList }) {
     addToSavedList(movie);
   };
 
+  const deleteMovie = () => {
+
+  }
+
   useEffect(() => {
     fetchMovie(params.id);
   }, [params.id]);
@@ -29,7 +33,7 @@ function Movie({ addToSavedList }) {
   return (
     <div className="save-wrapper">
       <MovieCard movie={movie} />
-
+      <Route path="/update-movie/:id"></Route>
       <div className="save-button" onClick={saveMovie}>
         Save
       </div>
