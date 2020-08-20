@@ -18,10 +18,6 @@ function Movie({ addToSavedList }) {
     addToSavedList(movie);
   };
 
-  const deleteMovie = () => {
-    
-  }
-
   useEffect(() => {
     fetchMovie(params.id);
   }, [params.id]);
