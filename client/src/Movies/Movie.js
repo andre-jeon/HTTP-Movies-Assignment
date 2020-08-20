@@ -4,7 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import UpdateMovie from "./UpdateMovie";
 
-function Movie({ addToSavedList }) {
+function Movie({ addToSavedList, movieList, setMovieList }) {
   const [movie, setMovie] = useState(null);
   const history = useHistory()
   const params = useParams();
@@ -22,7 +22,13 @@ function Movie({ addToSavedList }) {
       .delete(`http://localhost:5000/api/movies/${params.id}`)
       .then((res) => {
         console.log(res)
+        const updateMovieList = movieList.filter(movie => movie.id !== res.data) 
+        // filter out the movie that has the resp.data (return params.id) id that matches 
+        setMovieList(updateMovieList); 
+        // set the new list
+        history.push('/')
       })
+      .catch((err) => {console.error(err)})
   };
 
   const saveMovie = () => {
