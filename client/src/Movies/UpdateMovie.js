@@ -3,10 +3,10 @@ import { useParams, useHistory } from 'react-router-dom'
 import axios from 'axios'
 
 const initialMovie = {
-    id: '',
     title: '',
     director: '',
     metascore: 0,
+    starValue: '',
     stars: [],
 }
 
@@ -24,17 +24,8 @@ const UpdateMovie = (props) => {
             .catch((err) => console.error(err.message))
     }, [id])
 
-    const changeHandler = (ev) => {
-        ev.persist();
-        let value = ev.target.value;
-        if (ev.target.name === "price") {
-            value = parseInt(value, 10);
-        }
-
-        setMovies({
-            ...movie,
-            [ev.target.name]: value
-        });
+    const handleOnChange = (e) => {
+        setMovies({ ...movie, [e.target.name]: e.target.value })
     }
 
     const handleSubmit = (e) => {
@@ -42,11 +33,19 @@ const UpdateMovie = (props) => {
         axios
             .put(`http://localhost:5000/api/movies/${id}`, movie)
             .then((res) => {
-                props.setMovies(res.data);
-                history.push(`/update-movie/${id}`);
+                props.movieList.filter(movie => movie.id !== id) // removing the old Godfather
+                props.setMovieList([...props.movieList, res.data]); // setting res.data at the end of array
+                props.getMovieList(); // resets the state in app
+                history.push(`/movies/${id}`);
             })
             .catch((err) => console.error(err.message));
     };
+
+    const addStar = (e) => {
+        e.preventDefault();
+        setMovies({...movie, starValue: '', stars: [...movie.stars, movie.starValue]})
+    }
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -57,8 +56,8 @@ const UpdateMovie = (props) => {
                     type='text'
                     id='title'
                     name='title'
-                    value={setMovies.title}
-                    onChange={changeHandler}
+                    value={movie.title}
+                    onChange={handleOnChange}
                     placeholder='Title' />
             </label>
             <div className="baseline" />
@@ -68,8 +67,8 @@ const UpdateMovie = (props) => {
                     type='text'
                     id='director'
                     name='director'
-                    value={setMovies.director}
-                    onChange={changeHandler}
+                    value={movie.director}
+                    onChange={handleOnChange}
                     placeholder='Director' />
             </label>
             <div className="baseline" />
@@ -79,17 +78,33 @@ const UpdateMovie = (props) => {
                     type='number'
                     id='metascore'
                     name='metascore'
-                    value={setMovies.metascore}
-                    onChange={changeHandler}
+                    value={movie.metascore}
+                    onChange={handleOnChange}
                     placeholder='Metascore' />
             </label>
             <div className="baseline" />
 
-            <button>Update Movie</button>
+            <label htmlFor='starValue'>
+                <input
+                    type='text'
+                    id='starValue'
+                    name='starValue'
+                    value={movie.starValue}
+                    onChange={handleOnChange}
+                    placeholder='Star' />
+            </label>
+            <button onClick={addStar}>+</button>
+            <div className="baseline" />
+            
+            {movie.stars.map(star => {
+                return (
+                    <div>{star}</div>
+                )
+            })}
+
+            <button className="update-movie-btn">Update Movie</button>
         </form>
     )
-
-
 }
 
 export default UpdateMovie
