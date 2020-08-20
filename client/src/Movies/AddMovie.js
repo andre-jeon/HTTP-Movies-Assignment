@@ -49,7 +49,7 @@ const AddMovie = (props) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h1>Update Movie</h1>
+            <h1>Add Movie</h1>
 
             <label htmlFor='title'>
                 <input
@@ -93,14 +93,14 @@ const AddMovie = (props) => {
                     onChange={handleOnChange}
                     placeholder='Star' />
             </label>
-            <button onClick={addStar}>+</button>
+            {/* <button onClick={addStar}>+</button> */}
             <div className="baseline" />
-            
+{/*             
             {movie.stars.map(star => {
                 return (
                     <div>{star}</div>
                 )
-            })}
+            })} */}
 
             <button className="add-movie-btn">Add Movie</button>
         </form>
